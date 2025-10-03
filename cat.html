@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ice Cream Cone Builder</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #e0f7fa;
+        }
+        .cone-container {
+            position: relative;
+            width: 200px;
+            height: 400px;
+            margin-top: 40px;
+        }
+        .cone {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .scoop {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: top 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click Anywhere to Add a Scoop!</h1>
+    <div class="cone-container" id="coneContainer">
+        <!-- Cone SVG -->
+        <svg class="cone" width="120" height="180" viewBox="0 0 120 180">
+            <polygon points="60,180 10,40 110,40" fill="#f4c27a" stroke="#b8860b" stroke-width="4"/>
+            <line x1="60" y1="180" x2="60" y2="40" stroke="#b8860b" stroke-width="2"/>
+            <line x1="35" y1="110" x2="85" y2="110" stroke="#b8860b" stroke-width="2"/>
+            <line x1="45" y1="140" x2="75" y2="140" stroke="#b8860b" stroke-width="2"/>
+        </svg>
+        <!-- Scoops will be added here -->
+    </div>
+    <script>
+        const coneContainer = document.getElementById('coneContainer');
+        let scoopCount = 0;
+        const scoopColors = ["#ffb6c1", "#add8e6", "#fff68f", "#98fb98", "#dda0dd", "#ffe4e1", "#f5deb3"];
+        document.body.addEventListener('click', function(e) {
+            // Prevent adding scoop if click is on a scoop
+            if (e.target.classList.contains('scoop')) return;
+            scoopCount++;
+            const color = scoopColors[(scoopCount-1) % scoopColors.length];
+            const scoop = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+            scoop.setAttribute("cx", "60");
+            scoop.setAttribute("cy", String(40 - (scoopCount-1)*35));
+            scoop.setAttribute("rx", "40");
+            scoop.setAttribute("ry", "30");
+            scoop.setAttribute("fill", color);
+            scoop.setAttribute("stroke", "#888");
+            scoop.setAttribute("stroke-width", "3");
+            scoop.classList.add('scoop');
+            scoop.style.top = `${40 - (scoopCount-1)*35}px`;
+            // Create a wrapper SVG for each scoop
+            const scoopSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            scoopSVG.setAttribute("width", "120");
+            scoopSVG.setAttribute("height", "70");
+            scoopSVG.style.position = 'absolute';
+            scoopSVG.style.left = '0';
+            scoopSVG.style.top = `${40 - (scoopCount-1)*35}px`;
+            scoopSVG.appendChild(scoop);
+            coneContainer.appendChild(scoopSVG);
+        });
+    </script>
+</body>
+</html>
